@@ -1,0 +1,22 @@
+# named_placeholders
+
+compiles "select foo where foo.id = :bar and foo.baz < :baz" into "select foo where foo.id = ? and foo.baz < ?" + ["bar", "baz"]
+
+## usage
+```ts
+import { createCompiler, toNumbered } from "https://deno.land/x/named_placeholders@v1.0.0/mod.ts";
+
+let query = 'select users.json,EXISTS(Select 1 from moderators where moderators.id = :id) as is_moderator from users where users.id = :id and users.status = :status and users.complete_status = :complete_status';
+const compile = createCompiler();
+const [ sql, args ] = compile(query, {id: 123, status: 'Yes!', complete_status: 'No!'});
+
+console.log(sql);
+// select users.json,EXISTS(Select 1 from moderators where moderators.id = ?) as is_moderator from users where users.id = ? and users.status = ? and users.complete_status = ?
+
+console.log(args);
+// [ 123, 123, 'Yes!', 'No!' ]
+```
+
+## credits
+
+parser is based on @mscdex code of his excellent [node-mariasql](https://github.com/mscdex/node-mariasql) library
