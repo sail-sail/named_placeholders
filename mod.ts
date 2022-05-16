@@ -63,14 +63,11 @@ function parse(query: string) {
   }
   return [query];
 }
-// deno-lint-ignore no-explicit-any
-function createCompiler(config: any) {
-  if (!config)
-  config = {};
+function createCompiler(config: { placeholder?: string } = { }) {
   if (!config.placeholder) {
     config.placeholder = '?';
   }
-
+  
   // deno-lint-ignore no-explicit-any
   function toArrayParams(tree: any, params?: string[]) {
     const arr = [];
